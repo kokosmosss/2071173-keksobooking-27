@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Мария Гаврилова](https://up.htmlacademy.ru/javascript/27/user/2071173).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Хабиров](https://htmlacademy.ru/profile/alex_khab).
 
 ---
 
