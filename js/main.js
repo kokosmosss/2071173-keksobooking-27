@@ -12,7 +12,7 @@ const TYPE = [
   'hotel',
 ];
 
-const FEATCHURES = [
+const FEATURES = [
   'wifi',
   'dishwasher',
   'parking',
@@ -27,13 +27,24 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+const MIN_LAT_COORDINATE = 35.65000;
+const MAX_LAT_COORDINATE = 35.70000;
+
+const MIN_LNG_COORDINATE = 139.70000;
+const MAX_LNG_COORDINATE = 139.80000;
+
+const ADVERTISEMENT_COUNT = 10;
+
 const getRandomFloat = (min, max, decimal) => {
   if (min < 0 || decimal < 0 || max <= min) {
     return NaN;
   }
   const random = Math.random() * (max + (0.1 ** decimal) - min) + min;
+
   return Number(random.toFixed(decimal));
 };
+
+let advertismentNumber = 0;
 
 const getRandomInt = (min, max) => {
   if (min < 0 || max <= min) {
@@ -44,37 +55,30 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getAuthorAvatar = () => {
-  const result = getRandomInt(1, 10);
-  if (result < 10) {
-    return `img/avatars/user0${result}.png`;
-  } else {
-    return `img/avatars/user${result}.png`;
-  }
+const getAuthorAvatar = (avatarNumber) => {
+  const prettyAvatarNumber = avatarNumber < 10 ? `0${avatarNumber}` : 10;
+
+  return `img/avatars/user${prettyAvatarNumber}.png`;
 };
 
 const getArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
 
 const getNewArray = (array) => {
-  const newArray = [];
+  const newArray = array.slice();
   const newArrayLength = getRandomInt(1, array.length);
 
-  for (let i = 1; i <= newArrayLength; i++) {
-    const options = array.shift();
-    newArray.push(options);
-  }
-
-  return newArray;
+  return newArray.slice(0, newArrayLength);
 };
 
 const getAdvertisement = () => {
-  const latCoordinate = getRandomFloat(35.65000, 35.70000, 4);
-  const lngCoordinate = getRandomFloat(139.70000, 139.80000, 5);
+  advertismentNumber += 1;
+  const latCoordinate = getRandomFloat(MIN_LAT_COORDINATE, MAX_LAT_COORDINATE, 4);
+  const lngCoordinate = getRandomFloat(MIN_LNG_COORDINATE, MAX_LNG_COORDINATE, 5);
+
   return {
     author: {
-      avatar: getAuthorAvatar(),
+      avatar: getAuthorAvatar(advertismentNumber),
     },
-
     offer: {
       title: 'Уютное жилье в центре Токио',
       address: `${latCoordinate}, ${lngCoordinate}`,
@@ -84,11 +88,10 @@ const getAdvertisement = () => {
       guests: getRandomInt(1, 10),
       checkin: getArrayElement(TIME),
       checkout: getArrayElement(TIME),
-      features: getNewArray(FEATCHURES),
+      features: getNewArray(FEATURES),
       description: 'Какое-то описание',
       photos: getNewArray(PHOTOS),
     },
-
     location: {
       lat: latCoordinate,
       lng: lngCoordinate,
@@ -96,7 +99,5 @@ const getAdvertisement = () => {
   };
 };
 
-const newAdvertisements = Array.from({ length: 10 }, getAdvertisement);
-newAdvertisements(); // написала просто чтобы линтер не ругался
-
-
+const newAdvertisements = () => Array.from({length: ADVERTISEMENT_COUNT}, getAdvertisement);
+newAdvertisements();
