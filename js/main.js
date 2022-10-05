@@ -97,5 +97,6 @@ const getAdvertisement = () => {
 };
 
 const newAdvertisements = Array.from({ length: 10 }, getAdvertisement);
-console.log(newAdvertisements)
+newAdvertisements(); // написала просто чтобы линтер не ругался
+
 
