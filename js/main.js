@@ -47,9 +47,9 @@ const getRandomInt = (min, max) => {
 const getAuthorAvatar = () => {
   const result = getRandomInt(1, 10);
   if (result < 10) {
-    return `img/avatars/user + 0 + ${result} + .png`;
+    return `img/avatars/user0${result}.png`;
   } else {
-    return `img/avatars/user + ${result} + .png`;
+    return `img/avatars/user${result}.png`;
   }
 };
 
@@ -97,5 +97,5 @@ const getAdvertisement = () => {
 };
 
 const newAdvertisements = Array.from({ length: 10 }, getAdvertisement);
-newAdvertisements();// написала просто чтобы линтер не ругался
+console.log(newAdvertisements)
 
