@@ -64,15 +64,14 @@ const getAuthorAvatar = (avatarNumber) => {
 const getArrayElement = (elements) => elements[getRandomInt(0, elements.length - 1)];
 
 const getNewArray = (array) => {
-  const newArray = array.slice();
   const newArrayLength = getRandomInt(1, array.length);
 
-  return newArray.slice(0, newArrayLength);
+  return array.slice(0, newArrayLength);
 };
 
 const getAdvertisement = () => {
   advertismentNumber += 1;
-  const latCoordinate = getRandomFloat(MIN_LAT_COORDINATE, MAX_LAT_COORDINATE, 4);
+  const latCoordinate = getRandomFloat(MIN_LAT_COORDINATE, MAX_LAT_COORDINATE, 5);
   const lngCoordinate = getRandomFloat(MIN_LNG_COORDINATE, MAX_LNG_COORDINATE, 5);
 
   return {
