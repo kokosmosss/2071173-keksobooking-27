@@ -1,7 +1,4 @@
-import { getRandomFloat } from './util.js';
-import { getRandomInt } from './util.js';
-import { getArrayElement } from './util.js';
-import { getNewArray } from './util.js';
+import { getRandomFloat, getRandomInt, getArrayElement, getNewArray } from './util.js';
 
 const TIME = [
   '12:00',
@@ -44,11 +41,10 @@ const ADVERTISEMENT_COUNT = 10;
 let advertismentNumber = 0;
 
 const getAuthorAvatar = (avatarNumber) => {
-  const prettyAvatarNumber = avatarNumber < 10 ? `0${avatarNumber}` : 10;
+  const prettyAvatarNumber = avatarNumber < 10 ? avatarNumber.toString().padStart(2, '0') : 10;
 
   return `img/avatars/user${prettyAvatarNumber}.png`;
 };
-
 
 const getAdvertisement = () => {
   advertismentNumber += 1;
@@ -79,5 +75,5 @@ const getAdvertisement = () => {
   };
 };
 
-const newAdvertisements = () => Array.from({ length: ADVERTISEMENT_COUNT }, getAdvertisement);
-newAdvertisements();
+const getNewAdvertisements = () => Array.from({ length: ADVERTISEMENT_COUNT }, getAdvertisement);
+export {getNewAdvertisements};

@@ -24,7 +24,4 @@ const getNewArray = (array) => {
   return array.slice(0, newArrayLength);
 };
 
-export { getRandomFloat };
-export { getRandomInt };
-export { getArrayElement };
-export { getNewArray };
+export { getRandomFloat, getRandomInt, getArrayElement, getNewArray };

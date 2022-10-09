@@ -1,2 +1,2 @@
-import './util.js';
-import './data.js';
+import { getNewAdvertisements } from './data.js';
+getNewAdvertisements();
