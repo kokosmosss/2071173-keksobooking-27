@@ -49,6 +49,13 @@ similarCards.forEach((popup) => {
   });
   cardElement.querySelector('.popup__avatar').src = popup.author.avatar;
   mapCanvas.appendChild(cardElement);
-});
 
+  // const cardChildren = cardElement.children;
+
+  // for (let i = 0; i < cardChildren.length; i++) {
+  //   if (cardChildren[i].innerHTML === '') {
+  //     cardChildren[i].remove();
+  //   }
+  // }
+});
 
