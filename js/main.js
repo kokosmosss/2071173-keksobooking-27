@@ -1,4 +1,4 @@
-import { getNewAdvertisements } from './data.js';
-getNewAdvertisements();
+import { card } from './popup.js';
 
-import './popup.js';
+const mapCanvas = document.querySelector('.map__canvas');
+mapCanvas.appendChild(card);
