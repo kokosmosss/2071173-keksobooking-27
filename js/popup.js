@@ -51,7 +51,17 @@ const renderPopup = (popup) => {
   cardElement.querySelector('.popup__type').textContent = createAccomodationType(type);
   cardElement.querySelector('.popup__text--capacity').textContent = `${rooms} комнаты для ${guests} гостей`;
   cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${checkin}, выезд до ${checkout}`;
-  cardElement.querySelector('.popup__features').textContent = features;
+
+  const featureList = cardElement.querySelectorAll('.popup__feature');
+
+  featureList.forEach((featureListItem) => {
+    const isNecessary = features.some((feature) => featureListItem.classList.contains(`popup__feature--${feature}`));
+
+    if (!isNecessary) {
+      featureListItem.remove();
+    }
+  });
+
   cardElement.querySelector('.popup__description').textContent = description;
 
   const popupPhotosElement = cardElement.querySelector('.popup__photos');
@@ -62,14 +72,6 @@ const renderPopup = (popup) => {
   cardElement.querySelector('.popup__avatar').src = avatar;
 
   return cardElement;
-
-  // const cardChildren = cardElement.children;
-
-  // for (let i = 0; i < cardChildren.length; i++) {
-  //   if (cardChildren[i].innerHTML === '') {
-  //     cardChildren[i].remove();
-  //   }
-  // }
 };
 
 const card = renderPopup(similarCards[0]);
