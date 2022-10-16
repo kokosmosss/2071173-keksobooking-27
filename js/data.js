@@ -37,23 +37,27 @@ const MAX_LNG_COORDINATE = 139.80000;
 
 const ADVERTISEMENT_COUNT = 10;
 
+const createAuthorAvatar = () => {
+  let avatarNumber = 0;
 
-let advertismentNumber = 0;
+  return function () {
+    avatarNumber += 1;
+    const prettyAvatarNumber = avatarNumber < 10 ? avatarNumber.toString().padStart(2, '0') : 10;
 
-const getAuthorAvatar = (avatarNumber) => {
-  const prettyAvatarNumber = avatarNumber < 10 ? avatarNumber.toString().padStart(2, '0') : 10;
-
-  return `img/avatars/user${prettyAvatarNumber}.png`;
+    return `img/avatars/user${prettyAvatarNumber}.png`;
+  };
 };
 
+const getAuthorAvatar = createAuthorAvatar();
+
 const getAdvertisement = () => {
-  advertismentNumber += 1;
+
   const latCoordinate = getRandomFloat(MIN_LAT_COORDINATE, MAX_LAT_COORDINATE, 5);
   const lngCoordinate = getRandomFloat(MIN_LNG_COORDINATE, MAX_LNG_COORDINATE, 5);
 
   return {
     author: {
-      avatar: getAuthorAvatar(advertismentNumber),
+      avatar: getAuthorAvatar(),
     },
     offer: {
       title: 'Уютное жилье в центре Токио',
