@@ -15,12 +15,12 @@ const TYPE = [
 ];
 
 const FEATURES = [
-  'wifi',
-  'dishwasher',
-  'parking',
-  'washer',
-  'elevator',
-  'conditioner',
+  // 'wifi',
+  // 'dishwasher',
+  // 'parking',
+  // 'washer',
+  // 'elevator',
+  // 'conditioner',
 ];
 
 const PHOTOS = [
