@@ -1,6 +1,7 @@
 import { getNewAdvertisements } from './data.js';
 import { renderPopup } from './popup.js';
-import { deactivatePage, activatePage } from './form.js';
+import { deactivatePage, activatePage } from './page.js';
+import './form-validation.js';
 
 const similarCards = getNewAdvertisements();
 const mapCanvas = document.querySelector('.map__canvas');

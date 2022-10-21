@@ -11,13 +11,13 @@ const deactivatePage = () => {
   adForm.classList.add('ad-form--disabled');
   mapFilter.classList.add('map__filters--disabled');
   toggleElements(adFormElements, true);
-  toggleElements(mapFilters, false);
+  toggleElements(mapFilters, true);
 };
 
 const activatePage = () => {
   adForm.classList.remove('ad-form--disabled');
   mapFilter.classList.remove('map__filters--disabled');
-  toggleElements(adFormElements, true);
+  toggleElements(adFormElements, false);
   toggleElements(mapFilters, false);
 };
 
