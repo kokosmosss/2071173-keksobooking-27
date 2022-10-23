@@ -1,3 +1,7 @@
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+const MAX_NIGTH_PRICE = 100000;
+
 const adForm = document.querySelector('.ad-form');
 const price = adForm.querySelector('#price');
 const title = adForm.querySelector('#title');
@@ -20,8 +24,8 @@ const accommodationValues = {
   100: ['0'],
 };
 
-const validateTitle = () => title.length >= 30 && title.length <= 100;
-const validatePrice = () => price.value >= 0 && price.value <= 100000;
+const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.value.length <= MAX_TITLE_LENGTH;
+const validatePrice = () => price.value >= 0 && price.value <= MAX_NIGTH_PRICE;
 const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
 
 const onFormSubmit = (evt) => {
