@@ -1,6 +1,6 @@
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
-const MAX_NIGTH_PRICE = 100000;
+const MAX_NIGHT_PRICE = 100000;
 
 const adForm = document.querySelector('.ad-form');
 const price = adForm.querySelector('#price');
@@ -36,9 +36,8 @@ const minPrices = {
 };
 
 const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.value.length <= MAX_TITLE_LENGTH;
-const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGTH_PRICE;
+const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
 const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
-const validateTime = () => checkIn.value === checkOut.value;
 
 const onFormSubmit = (evt) => {
   evt.preventDefault();
@@ -51,25 +50,21 @@ const onTypeChange = () => {
   pristine.validate(price);
 };
 
-const onTimeChange = () => {
-  checkOut.value = checkIn.value;
-  pristine.validate(checkIn);
-  pristine.validate(checkOut);
-};
-
 const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${minPrices[type.value]} руб.`;
 
 const initValidation = () => {
   pristine.addValidator(title, validateTitle);
   pristine.addValidator(price, validatePrice, printMinPriceError);
   pristine.addValidator(rooms, validateAccommodation, 'Выбранное количество комнат не подходит для выбранного количества гостей');
-  pristine.addValidator(checkIn, validateTime);
-  pristine.addValidator(checkOut, validateTime);
   capacity.addEventListener('change', () => pristine.validate(rooms));
   rooms.addEventListener('change', () => pristine.validate(capacity));
   type.addEventListener('change', onTypeChange);
-  checkIn.addEventListener('change', onTimeChange);
-  checkOut.addEventListener('change', onTimeChange);
+  checkIn.addEventListener('change', () => {
+    checkOut.value = checkIn.value;
+  });
+  checkOut.addEventListener('change', () => {
+    checkIn.value = checkOut.value;
+  });
   adForm.addEventListener('submit', onFormSubmit);
 };
 
