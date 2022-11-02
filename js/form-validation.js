@@ -1,3 +1,5 @@
+// import { mainMarker } from './map.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_NIGHT_PRICE = 100000;
@@ -5,6 +7,7 @@ const MAX_NIGHT_PRICE = 100000;
 const adForm = document.querySelector('.ad-form');
 const price = adForm.querySelector('#price');
 const title = adForm.querySelector('#title');
+const address = adForm.querySelector('#address');
 const rooms = adForm.querySelector('#room_number');
 const capacity = adForm.querySelector('#capacity');
 const type = adForm.querySelector('#type');
@@ -18,7 +21,6 @@ const pristine = new Pristine(adForm, {
   errorTextTag: 'span',
   errorTextClass: 'text-help',
 });
-
 
 const accommodationValues = {
   1: ['1'],
@@ -50,12 +52,15 @@ const onTypeChange = () => {
   pristine.validate(price);
 };
 
+address.readOnly = true;
+
 const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${minPrices[type.value]} руб.`;
 
 const initValidation = () => {
   pristine.addValidator(title, validateTitle);
   pristine.addValidator(price, validatePrice, printMinPriceError);
   pristine.addValidator(rooms, validateAccommodation, 'Выбранное количество комнат не подходит для выбранного количества гостей');
+
   capacity.addEventListener('change', () => pristine.validate(rooms));
   rooms.addEventListener('change', () => pristine.validate(capacity));
   type.addEventListener('change', onTypeChange);
@@ -69,4 +74,5 @@ const initValidation = () => {
 };
 
 export { initValidation };
+export { address };
 
