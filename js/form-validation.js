@@ -1,5 +1,3 @@
-// import { mainMarker } from './map.js';
-
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_NIGHT_PRICE = 100000;
@@ -13,6 +11,7 @@ const capacity = adForm.querySelector('#capacity');
 const type = adForm.querySelector('#type');
 const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
+const sliderElement = adForm.querySelector('.ad-form__slider');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -49,6 +48,7 @@ const onFormSubmit = (evt) => {
 const onTypeChange = () => {
   price.min = minPrices[type.value];
   price.placeholder = minPrices[type.value];
+  price.value = 0; // это нужно прописать? вроде логично, чтобы цена обнулялась и показывалась ошибка. еще лучше чтобы поле вообще очищалось и был виден только плейсхолдер. это можно как то сделать?
   pristine.validate(price);
 };
 
@@ -72,6 +72,37 @@ const initValidation = () => {
   });
   adForm.addEventListener('submit', onFormSubmit);
 };
+
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: 100000,
+  },
+  start: 0,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return Number(value);
+    },
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  price.value = sliderElement.noUiSlider.get();
+});
+
+// вот тут не понятно, на что ссылается this?
+const onSliderChange = function () {
+  sliderElement.noUiSlider.set(this.value);
+  pristine.validate(price); // при изменении поля ползунком не показывает ошибку про мин цену до момента отправки формы, как поправить ?
+};
+
+price.addEventListener('change', onSliderChange);
 
 export { initValidation };
 export { address };

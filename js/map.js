@@ -1,16 +1,27 @@
 import { activatePage } from './page.js';
 import { address } from './form-validation.js';
-import { getNewAdvertisements } from './data.js';
+import { renderPopup } from './popup.js';
 
-const map = L.map('map-canvas')
-  .on('load', activatePage)
-  .setView({
-    lat: 35.652832,
-    lng: 139.839478,
-  }, 12);
+const TOKIO_LAT = 35.65785;
+const TOKIO_LNG = 139.78248;
+const ZOOM = 12;
+const MAX_ZOOM = 19;
+// вот если я правильно поняла, то нужна такая функция, но дальше что я ней надо делать? с учетом что ее вызов должен быть внутри модуля. если я ее в мейне вызываю, то вылезает ошибка
+const initMap = () => {
+  const mainMap = L.map('map-canvas')
+    .on('load', activatePage) // вот тут я так понимаю без скобок надо - передавать ссылку. но как понять логику, где они нужны, а где нет?
+    .setView({
+      lat: TOKIO_LAT,
+      lng: TOKIO_LNG,
+    }, ZOOM);
+
+  return mainMap;
+};
+
+const map = initMap();
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
+  maxZoom: MAX_ZOOM,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
@@ -28,8 +39,8 @@ const pinIcon = L.icon({
 
 const mainMarker = L.marker(
   {
-    lat: 35.65785,
-    lng: 139.78248,
+    lat: TOKIO_LAT,
+    lng: TOKIO_LNG,
   },
   {
     draggable: true,
@@ -39,15 +50,15 @@ const mainMarker = L.marker(
 
 mainMarker.addTo(map);
 
+address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
+
 mainMarker.on('moveend', (evt) => {
   const coordinates = evt.target.getLatLng();
   address.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
 });
 
-const similarCards = getNewAdvertisements();
-
-const getMarkers = (advertisement) => {
-  advertisement.forEach((element) => {
+const getMarkers = (advertisements) => {
+  advertisements.forEach((element) => {
     const marker = L.marker(
       {
         lat: element.location.lat,
@@ -58,8 +69,9 @@ const getMarkers = (advertisement) => {
       },
     );
     marker
-      .addTo(map);
+      .addTo(map)
+      .bindPopup(renderPopup(element));
   });
 };
 
-getMarkers(similarCards);
+export { getMarkers };
