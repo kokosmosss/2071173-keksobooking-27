@@ -48,15 +48,42 @@ const onFormSubmit = (evt) => {
 const onTypeChange = () => {
   price.min = minPrices[type.value];
   price.placeholder = minPrices[type.value];
-  price.value = 0; // это нужно прописать? вроде логично, чтобы цена обнулялась и показывалась ошибка. еще лучше чтобы поле вообще очищалось и был виден только плейсхолдер. это можно как то сделать?
-  pristine.validate(price);
 };
-
-address.readOnly = true;
 
 const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${minPrices[type.value]} руб.`;
 
+const createSlider = () => {
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 100000,
+    },
+    start: 0,
+    step: 1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(0),
+      from: (value) => Number(value),
+    },
+  });
+};
+
+const onSliderChange = () => {
+  sliderElement.noUiSlider.set(price.value);
+};
+
+const initSlider = () => {
+  createSlider();
+  price.addEventListener('change', onSliderChange);
+
+  sliderElement.noUiSlider.on('update', () => {
+    price.value = sliderElement.noUiSlider.get();
+    pristine.validate(price);
+  });
+};
+
 const initValidation = () => {
+  address.readOnly = true;
   pristine.addValidator(title, validateTitle);
   pristine.addValidator(price, validatePrice, printMinPriceError);
   pristine.addValidator(rooms, validateAccommodation, 'Выбранное количество комнат не подходит для выбранного количества гостей');
@@ -73,37 +100,6 @@ const initValidation = () => {
   adForm.addEventListener('submit', onFormSubmit);
 };
 
+export { initValidation, initSlider };
 
-noUiSlider.create(sliderElement, {
-  range: {
-    min: 0,
-    max: 100000,
-  },
-  start: 0,
-  step: 1,
-  connect: 'lower',
-  format: {
-    to: function (value) {
-      return value.toFixed(0);
-    },
-    from: function (value) {
-      return Number(value);
-    },
-  },
-});
-
-sliderElement.noUiSlider.on('update', () => {
-  price.value = sliderElement.noUiSlider.get();
-});
-
-// вот тут не понятно, на что ссылается this?
-const onSliderChange = function () {
-  sliderElement.noUiSlider.set(this.value);
-  pristine.validate(price); // при изменении поля ползунком не показывает ошибку про мин цену до момента отправки формы, как поправить ?
-};
-
-price.addEventListener('change', onSliderChange);
-
-export { initValidation };
-export { address };
 

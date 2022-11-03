@@ -1,28 +1,21 @@
 import { activatePage } from './page.js';
-import { address } from './form-validation.js';
 import { renderPopup } from './popup.js';
+import { getNewAdvertisements } from './data.js';
 
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
 const ZOOM = 12;
 const MAX_ZOOM = 19;
-// вот если я правильно поняла, то нужна такая функция, но дальше что я ней надо делать? с учетом что ее вызов должен быть внутри модуля. если я ее в мейне вызываю, то вылезает ошибка
-const initMap = () => {
-  const mainMap = L.map('map-canvas')
-    .on('load', activatePage) // вот тут я так понимаю без скобок надо - передавать ссылку. но как понять логику, где они нужны, а где нет?
-    .setView({
-      lat: TOKIO_LAT,
-      lng: TOKIO_LNG,
-    }, ZOOM);
+const TILELAYER_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const TILELAYER_ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
-  return mainMap;
-};
+const address = document.querySelector('#address');
+const map = L.map('map-canvas');
+const similarCards = getNewAdvertisements();
 
-const map = initMap();
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer(TILELAYER_URL, {
   maxZoom: MAX_ZOOM,
-  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  attribution: TILELAYER_ATTRIBUTION
 }).addTo(map);
 
 const mainPinIcon = L.icon({
@@ -48,16 +41,14 @@ const mainMarker = L.marker(
   },
 );
 
-mainMarker.addTo(map);
-
 address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
 
-mainMarker.on('moveend', (evt) => {
-  const coordinates = evt.target.getLatLng();
-  address.value = `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
-});
+const onMarkerMove = (evt) => {
+  const { lat, lng } = evt.target.getLatLng();
+  address.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
 
-const getMarkers = (advertisements) => {
+const renderMarkers = (advertisements) => {
   advertisements.forEach((element) => {
     const marker = L.marker(
       {
@@ -74,4 +65,18 @@ const getMarkers = (advertisements) => {
   });
 };
 
-export { getMarkers };
+const initMap = () => {
+  map.on('load', () => {
+    activatePage();
+    renderMarkers(similarCards);
+  })
+    .setView({
+      lat: TOKIO_LAT,
+      lng: TOKIO_LNG,
+    }, ZOOM);
+
+  mainMarker.addTo(map);
+  mainMarker.on('move', onMarkerMove);
+};
+
+export { initMap };

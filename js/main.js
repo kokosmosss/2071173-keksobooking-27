@@ -1,11 +1,10 @@
-import { getNewAdvertisements } from './data.js';
-import { deactivatePage, activatePage } from './page.js';
-import { initValidation } from './form-validation.js';
-import { getMarkers } from './map.js';
 
-const similarCards = getNewAdvertisements();
-getMarkers(similarCards);
+import { deactivatePage } from './page.js';
+import { initValidation, initSlider } from './form-validation.js';
+import { initMap } from './map.js';
+
 deactivatePage();
-activatePage(); // я оставила вызов тут просто чтобы работало, если убрать - форма заблокирована
+initMap();
+initSlider();
 initValidation();
 
