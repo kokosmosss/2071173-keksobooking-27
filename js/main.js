@@ -1,12 +1,10 @@
-import { getNewAdvertisements } from './data.js';
-import { renderPopup } from './popup.js';
-import { deactivatePage, activatePage } from './page.js';
-import { initValidation } from './form-validation.js';
 
-const similarCards = getNewAdvertisements();
-const mapCanvas = document.querySelector('.map__canvas');
-const card = renderPopup(similarCards[0]);
-mapCanvas.appendChild(card);
+import { deactivatePage } from './page.js';
+import { initValidation, initSlider } from './form-validation.js';
+import { initMap } from './map.js';
+
 deactivatePage();
-activatePage();
+initMap();
+initSlider();
 initValidation();
+

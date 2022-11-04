@@ -5,11 +5,13 @@ const MAX_NIGHT_PRICE = 100000;
 const adForm = document.querySelector('.ad-form');
 const price = adForm.querySelector('#price');
 const title = adForm.querySelector('#title');
+const address = adForm.querySelector('#address');
 const rooms = adForm.querySelector('#room_number');
 const capacity = adForm.querySelector('#capacity');
 const type = adForm.querySelector('#type');
 const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
+const sliderElement = adForm.querySelector('.ad-form__slider');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -18,7 +20,6 @@ const pristine = new Pristine(adForm, {
   errorTextTag: 'span',
   errorTextClass: 'text-help',
 });
-
 
 const accommodationValues = {
   1: ['1'],
@@ -47,15 +48,46 @@ const onFormSubmit = (evt) => {
 const onTypeChange = () => {
   price.min = minPrices[type.value];
   price.placeholder = minPrices[type.value];
-  pristine.validate(price);
 };
 
 const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${minPrices[type.value]} руб.`;
 
+const createSlider = () => {
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 100000,
+    },
+    start: 0,
+    step: 1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(0),
+      from: (value) => Number(value),
+    },
+  });
+};
+
+const onSliderChange = () => {
+  sliderElement.noUiSlider.set(price.value);
+};
+
+const initSlider = () => {
+  createSlider();
+  price.addEventListener('change', onSliderChange);
+
+  sliderElement.noUiSlider.on('update', () => {
+    price.value = sliderElement.noUiSlider.get();
+    pristine.validate(price);
+  });
+};
+
 const initValidation = () => {
+  address.readOnly = true;
   pristine.addValidator(title, validateTitle);
   pristine.addValidator(price, validatePrice, printMinPriceError);
   pristine.addValidator(rooms, validateAccommodation, 'Выбранное количество комнат не подходит для выбранного количества гостей');
+
   capacity.addEventListener('change', () => pristine.validate(rooms));
   rooms.addEventListener('change', () => pristine.validate(capacity));
   type.addEventListener('change', onTypeChange);
@@ -68,5 +100,6 @@ const initValidation = () => {
   adForm.addEventListener('submit', onFormSubmit);
 };
 
-export { initValidation };
+export { initValidation, initSlider };
+
 
