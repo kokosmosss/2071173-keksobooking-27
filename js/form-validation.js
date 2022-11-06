@@ -1,3 +1,6 @@
+import { sendData } from './api.js';
+import { showErrorMessage, showSuccessMessage } from './util.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_NIGHT_PRICE = 100000;
@@ -19,7 +22,7 @@ const pristine = new Pristine(adForm, {
   errorTextParent: 'ad-form__element',
   errorTextTag: 'span',
   errorTextClass: 'text-help',
-});
+}, false);
 
 const accommodationValues = {
   1: ['1'],
@@ -40,9 +43,22 @@ const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.valu
 const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
 const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
 
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  pristine.validate();
+const onFormSubmit = (onSuccess) => {
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    sendData(
+      () => onSuccess(),
+      () => showErrorMessage(),
+      new FormData(adForm),
+    );
+  }
+};
+
+// тут пока не полностью сделала. тут еще надо менять метку, адрес и скрывать балун - это ок делать тут в функции в этом модуле?
+const resetForm = () => {
+  adForm.reset();
+  showSuccessMessage();
 };
 
 const onTypeChange = () => {
@@ -58,7 +74,7 @@ const createSlider = () => {
       min: 0,
       max: 100000,
     },
-    start: 0,
+    start: minPrices[type.value],
     step: 1,
     connect: 'lower',
     format: {
@@ -97,7 +113,10 @@ const initValidation = () => {
   checkOut.addEventListener('change', () => {
     checkIn.value = checkOut.value;
   });
-  adForm.addEventListener('submit', onFormSubmit);
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    onFormSubmit(resetForm);
+  });
 };
 
 export { initValidation, initSlider };
