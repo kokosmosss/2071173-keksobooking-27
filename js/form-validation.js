@@ -1,5 +1,6 @@
 import { sendData } from './api.js';
-import { showErrorMessage, showSuccessMessage } from './util.js';
+import { showErrorMessage, showSuccessMessage } from './messages.js';
+import { resetMap } from './map.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -43,23 +44,6 @@ const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.valu
 const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
 const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
 
-const onFormSubmit = (onSuccess) => {
-  const isValid = pristine.validate();
-
-  if (isValid) {
-    sendData(
-      () => onSuccess(),
-      () => showErrorMessage(),
-      new FormData(adForm),
-    );
-  }
-};
-
-// тут пока не полностью сделала. тут еще надо менять метку, адрес и скрывать балун - это ок делать тут в функции в этом модуле?
-const resetForm = () => {
-  adForm.reset();
-  showSuccessMessage();
-};
 
 const onTypeChange = () => {
   price.min = minPrices[type.value];
@@ -97,6 +81,24 @@ const initSlider = () => {
     pristine.validate(price);
   });
 };
+// resetMap не работае ...
+const onSendSuccess = () => {
+  resetMap();
+  showSuccessMessage();
+};
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    sendData(
+      onSendSuccess,
+      showErrorMessage,
+      new FormData(adForm),
+    );
+  }
+};
 
 const initValidation = () => {
   address.readOnly = true;
@@ -113,10 +115,7 @@ const initValidation = () => {
   checkOut.addEventListener('change', () => {
     checkIn.value = checkOut.value;
   });
-  adForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    onFormSubmit(resetForm);
-  });
+  adForm.addEventListener('submit', onFormSubmit);
 };
 
 export { initValidation, initSlider };

@@ -1,6 +1,7 @@
 import { activatePage } from './page.js';
 import { renderPopup } from './popup.js';
-import { getNewAdvertisements } from './data.js';
+import { getData } from './api.js';
+import { showAlert } from './messages.js';
 
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
@@ -11,7 +12,6 @@ const TILELAYER_ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copy
 
 const address = document.querySelector('#address');
 const map = L.map('map-canvas');
-const similarCards = getNewAdvertisements();
 
 L.tileLayer(TILELAYER_URL, {
   maxZoom: MAX_ZOOM,
@@ -68,7 +68,7 @@ const renderMarkers = (advertisements) => {
 const initMap = () => {
   map.on('load', () => {
     activatePage();
-    renderMarkers(similarCards);
+    getData(renderMarkers, showAlert);
   })
     .setView({
       lat: TOKIO_LAT,
@@ -79,4 +79,8 @@ const initMap = () => {
   mainMarker.on('move', onMarkerMove);
 };
 
-export { initMap };
+const resetMap = () => {
+  address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
+};
+
+export { renderMarkers, initMap, resetMap };

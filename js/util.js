@@ -26,45 +26,4 @@ const getNewArray = (array) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const closeElement = (element) => {
-  element.style.display = 'none';
-  // или вот так? element.remove();
-  // не понимаю как и где удалять обработчик
-};
-
-const showSuccessMessage = () => {
-  const successTemplate = document.querySelector('#success')
-    .content
-    .querySelector('.success');
-  const successMessage = successTemplate.cloneNode(true);
-  document.body.appendChild(successMessage);
-
-  // тут еще надо сделать закрытие по произвольному клику, это значит его надо через event на document ловить?
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey(evt)) {
-      closeElement(successMessage);
-    }
-  });
-};
-
-const showErrorMessage = () => {
-  const errorTemplate = document.querySelector('#error')
-    .content
-    .querySelector('.error');
-  const errorMessage = errorTemplate.cloneNode(true);
-  document.body.appendChild(errorMessage);
-
-  const errorButton = errorMessage.querySelector('.error__button');
-
-  errorButton.addEventListener('click', () => {
-    closeElement(errorMessage);
-  });
-
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey(evt)) {
-      closeElement(errorMessage);
-    }
-  });
-};
-
-export { getRandomFloat, getRandomInt, getArrayElement, getNewArray, showSuccessMessage, showErrorMessage };
+export { getRandomFloat, getRandomInt, getArrayElement, getNewArray, isEscapeKey };

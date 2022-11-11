@@ -11,7 +11,7 @@ const offerTypeDictionary = {
 };
 
 const renderPhotos = (block, photos, template) => {
-  if (photos.length !== 0) {
+  if (photos && photos.length !== 0) {
     photos.forEach((photo) => {
       const imageElement = template.cloneNode(true);
       imageElement.src = photo;
@@ -23,7 +23,7 @@ const renderPhotos = (block, photos, template) => {
 };
 
 const renderFeatures = (featureList, featuresArray, featuresListParent) => {
-  if (featuresArray.length !== 0) {
+  if (featuresArray && featuresArray.length !== 0) {
     featureList.forEach((featureListItem) => {
       const isNecessary = featuresArray.some((feature) => featureListItem.classList.contains(`popup__feature--${feature}`));
 
@@ -69,12 +69,11 @@ const renderPopup = (popup) => {
   const popupPhotoTemplate = popupPhotosElement.querySelector('.popup__photo');
   const descriptionItem = cardElement.querySelector('.popup__description');
 
-  if (description.length !== 0) {
+  if (description && description.length !== 0) {
     descriptionItem.textContent = description;
   } else {
     descriptionItem.remove();
   }
-
   renderFeatures(featureList, features, featuresListParent);
 
   popupPhotosElement.innerHTML = '';
