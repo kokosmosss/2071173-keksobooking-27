@@ -92,7 +92,7 @@ const resetForm = () => {
 
 resetButton.addEventListener('click', () => {
   resetForm();
-  resetMap();
+  resetMap(); // и вот тут он у меня адрес вычищает почему то, именно в обработчике. при отправке корректно работет.
 });
 
 const onSendSuccess = () => {
