@@ -16,6 +16,7 @@ const type = adForm.querySelector('#type');
 const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
 const sliderElement = adForm.querySelector('.ad-form__slider');
+const resetButton = adForm.querySelector('.ad-form__reset');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -81,10 +82,23 @@ const initSlider = () => {
     pristine.validate(price);
   });
 };
-// resetMap не работает ...
-const onSendSuccess = () => {
+
+const resetForm = () => {
+  adForm.reset();
+  price.placeholder = minPrices[type.value]; // пока я не написала эту строку у меня плейсхолдер устанавливался некорректно, не соответствовал изначальному...
+  sliderElement.noUiSlider.set(price.value);
+};
+// после вызова очистки валидатор выдает ошибку. как убрать?
+
+resetButton.addEventListener('click', () => {
+  resetForm();
   resetMap();
+});
+
+const onSendSuccess = () => {
   showSuccessMessage();
+  resetForm();
+  resetMap();
 };
 
 const onFormSubmit = (evt) => {

@@ -87,6 +87,7 @@ const initMap = () => {
 
 const resetMap = () => {
   address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
+  mainMarker.setLatLng([TOKIO_LAT, TOKIO_LNG]);
 };
 
 export { renderMarkers, initMap, resetMap };
