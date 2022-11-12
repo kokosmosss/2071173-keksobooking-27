@@ -1,4 +1,4 @@
-import { activatePage } from './page.js';
+import { activateForm, activateFilters } from './page.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './messages.js';
@@ -9,6 +9,7 @@ const ZOOM = 12;
 const MAX_ZOOM = 19;
 const TILELAYER_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILELAYER_ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+const ADVERTISEMENT_COUNT = 10;
 
 const address = document.querySelector('#address');
 const map = L.map('map-canvas');
@@ -65,10 +66,15 @@ const renderMarkers = (advertisements) => {
   });
 };
 
+const onDataSuccess = (ads) => {
+  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
+  activateFilters();
+};
+
 const initMap = () => {
   map.on('load', () => {
-    activatePage();
-    getData(renderMarkers, showAlert);
+    activateForm();
+    getData(onDataSuccess, showAlert);
   })
     .setView({
       lat: TOKIO_LAT,

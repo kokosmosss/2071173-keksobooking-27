@@ -81,7 +81,7 @@ const initSlider = () => {
     pristine.validate(price);
   });
 };
-// resetMap не работае ...
+// resetMap не работает ...
 const onSendSuccess = () => {
   resetMap();
   showSuccessMessage();

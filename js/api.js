@@ -1,8 +1,8 @@
-const ADVERTISEMENT_COUNT = 10;
+const API_URL = 'https://27.javascript.pages.academy/keksobooking';
 
 const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://27.javascript.pages.academy/keksobooking',
+    API_URL,
     {
       method: 'POST',
       body,
@@ -19,11 +19,9 @@ const sendData = (onSuccess, onFail, body) => {
 };
 
 const getData = (onSuccess, onFail) => {
-  fetch('https://27.javascript.pages.academy/keksobooking/data')
+  fetch(`${API_URL}/data`)
     .then((response) => response.json())
-    .then((ads) => {
-      onSuccess(ads.slice(0, ADVERTISEMENT_COUNT));
-    })
+    .then((ads) => onSuccess(ads))
     .catch(onFail);
 };
 
