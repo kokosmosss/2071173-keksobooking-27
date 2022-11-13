@@ -11,19 +11,19 @@ const errorTemplate = document.querySelector('#error')
 
 const renderMessage = (element) => {
   document.body.appendChild(element);
-  // я конструкцию с удалением обработчика не до конца понимаю. как может функция внутри себя ссылаться на себя?))
-  const onDocumentKeydown = (evt) => {
-    if (isEscapeKey(evt)) {
-      element.remove();
-      document.removeEventListener('keydown', onDocumentKeydown);
-    }
+
+  const closeElement = () => {
+    element.remove();
+    document.removeEventListener('keydown', onDocumentKeydown);
   };
 
-  // тут ведь не нужно удалять обработчик, поскольку элемент удаляется из дома?
-  element.addEventListener('click', () => {
-    element.remove();
-  });
+  function onDocumentKeydown (evt) {
+    if (isEscapeKey(evt)) {
+      closeElement();
+    }
+  }
 
+  element.addEventListener('click', closeElement);
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
