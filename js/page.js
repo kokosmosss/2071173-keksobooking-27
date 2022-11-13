@@ -14,11 +14,14 @@ const deactivatePage = () => {
   toggleElements(mapFilters, true);
 };
 
-const activatePage = () => {
+const activateForm = () => {
   adForm.classList.remove('ad-form--disabled');
-  mapFilter.classList.remove('map__filters--disabled');
   toggleElements(adFormElements, false);
+};
+
+const activateFilters = () => {
+  mapFilter.classList.remove('map__filters--disabled');
   toggleElements(mapFilters, false);
 };
 
-export { deactivatePage, activatePage };
+export { deactivatePage, activateForm, activateFilters };

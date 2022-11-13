@@ -1,3 +1,7 @@
+import { sendData } from './api.js';
+import { showErrorMessage, showSuccessMessage } from './messages.js';
+import { resetMap } from './map.js';
+
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
 const MAX_NIGHT_PRICE = 100000;
@@ -12,6 +16,7 @@ const type = adForm.querySelector('#type');
 const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
 const sliderElement = adForm.querySelector('.ad-form__slider');
+const resetButton = adForm.querySelector('.ad-form__reset');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -19,7 +24,7 @@ const pristine = new Pristine(adForm, {
   errorTextParent: 'ad-form__element',
   errorTextTag: 'span',
   errorTextClass: 'text-help',
-});
+}, false);
 
 const accommodationValues = {
   1: ['1'],
@@ -40,10 +45,6 @@ const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.valu
 const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
 const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
 
-const onFormSubmit = (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-};
 
 const onTypeChange = () => {
   price.min = minPrices[type.value];
@@ -58,7 +59,7 @@ const createSlider = () => {
       min: 0,
       max: 100000,
     },
-    start: 0,
+    start: minPrices[type.value],
     step: 1,
     connect: 'lower',
     format: {
@@ -80,6 +81,37 @@ const initSlider = () => {
     price.value = sliderElement.noUiSlider.get();
     pristine.validate(price);
   });
+};
+
+const resetForm = () => {
+  adForm.reset();
+  price.placeholder = minPrices[type.value]; // пока я не написала эту строку у меня плейсхолдер устанавливался некорректно, не соответствовал изначальному...
+  sliderElement.noUiSlider.set(price.value);
+};
+// после вызова очистки валидатор выдает ошибку. как убрать?
+
+resetButton.addEventListener('click', () => {
+  resetForm();
+  resetMap(); // и вот тут он у меня адрес вычищает почему то, именно в обработчике. при отправке корректно работет.
+});
+
+const onSendSuccess = () => {
+  showSuccessMessage();
+  resetForm();
+  resetMap();
+};
+
+const onFormSubmit = (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    sendData(
+      onSendSuccess,
+      showErrorMessage,
+      new FormData(adForm),
+    );
+  }
 };
 
 const initValidation = () => {

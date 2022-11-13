@@ -24,4 +24,6 @@ const getNewArray = (array) => {
   return array.slice(0, newArrayLength);
 };
 
-export { getRandomFloat, getRandomInt, getArrayElement, getNewArray };
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export { getRandomFloat, getRandomInt, getArrayElement, getNewArray, isEscapeKey };
