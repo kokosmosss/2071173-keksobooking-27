@@ -87,8 +87,7 @@ const resetForm = () => {
   adForm.reset();
   price.placeholder = minPrices[type.value]; // пока я не написала эту строку у меня плейсхолдер устанавливался некорректно, не соответствовал изначальному...
   sliderElement.noUiSlider.set(price.value);
-};
-// после вызова очистки валидатор выдает ошибку. как убрать?
+}; // после вызова очистки валидатор выдает ошибку. как убрать?
 
 resetButton.addEventListener('click', () => {
   resetForm();

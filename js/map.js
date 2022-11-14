@@ -2,6 +2,7 @@ import { activateForm, activateFilters } from './page.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './messages.js';
+import { applyFilters, onAnyFilterChange } from './filters.js';
 
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
@@ -9,10 +10,10 @@ const ZOOM = 12;
 const MAX_ZOOM = 19;
 const TILELAYER_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILELAYER_ATTRIBUTION = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-const ADVERTISEMENT_COUNT = 10;
 
 const address = document.querySelector('#address');
 const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
 
 L.tileLayer(TILELAYER_URL, {
   maxZoom: MAX_ZOOM,
@@ -50,6 +51,7 @@ const onMarkerMove = (evt) => {
 };
 
 const renderMarkers = (advertisements) => {
+  markerGroup.clearLayers();
   advertisements.forEach((element) => {
     const marker = L.marker(
       {
@@ -61,14 +63,17 @@ const renderMarkers = (advertisements) => {
       },
     );
     marker
-      .addTo(map)
+      .addTo(markerGroup)
       .bindPopup(renderPopup(element));
   });
 };
 
 const onDataSuccess = (ads) => {
-  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
+  renderMarkers(ads);
   activateFilters();
+  onAnyFilterChange(() => {
+    applyFilters(ads);
+  });
 };
 
 const initMap = () => {
@@ -87,7 +92,10 @@ const initMap = () => {
 
 const resetMap = () => {
   address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
-  mainMarker.setLatLng([TOKIO_LAT, TOKIO_LNG]);
+  mainMarker.setLatLng({
+    lat: TOKIO_LAT,
+    lng: TOKIO_LNG,
+  });
 };
 
 export { renderMarkers, initMap, resetMap };
