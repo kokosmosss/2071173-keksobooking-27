@@ -1,6 +1,7 @@
 import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './messages.js';
-import { resetMap } from './map.js';
+import { resetMap, setDefaultAdress } from './map.js';
+import { resetFilters } from './filters.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -92,12 +93,16 @@ const resetForm = () => {
 resetButton.addEventListener('click', () => {
   resetForm();
   resetMap(); // и вот тут он у меня адрес вычищает почему то, именно в обработчике. при отправке корректно работет.
+  resetFilters();
+  setTimeout(setDefaultAdress, 1);
 });
 
 const onSendSuccess = () => {
   showSuccessMessage();
   resetForm();
   resetMap();
+  resetFilters();
+  setDefaultAdress();
 };
 
 const onFormSubmit = (evt) => {
