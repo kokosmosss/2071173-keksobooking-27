@@ -26,4 +26,13 @@ const getNewArray = (array) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export { getRandomFloat, getRandomInt, getArrayElement, getNewArray, isEscapeKey };
+function debounce(cb, timeoutDelay = 500) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => cb.apply(this, rest), timeoutDelay);
+  };
+}
+
+export { getRandomFloat, getRandomInt, getArrayElement, getNewArray, isEscapeKey, debounce };

@@ -18,6 +18,7 @@ const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
 const sliderElement = adForm.querySelector('.ad-form__slider');
 const resetButton = adForm.querySelector('.ad-form__reset');
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -92,10 +93,20 @@ const resetForm = () => {
 
 resetButton.addEventListener('click', () => {
   resetForm();
-  resetMap(); // и вот тут он у меня адрес вычищает почему то, именно в обработчике. при отправке корректно работет.
+  resetMap();
   resetFilters();
-  setTimeout(setDefaultAdress, 1);
+  setDefaultAdress(); // и вот тут он у меня адрес вычищает почему то, именно по нажатию на reset-кнопку. при отправке корректно работет.
 });
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
 
 const onSendSuccess = () => {
   showSuccessMessage();
@@ -103,6 +114,7 @@ const onSendSuccess = () => {
   resetMap();
   resetFilters();
   setDefaultAdress();
+  unblockSubmitButton();
 };
 
 const onFormSubmit = (evt) => {
@@ -110,9 +122,13 @@ const onFormSubmit = (evt) => {
   const isValid = pristine.validate();
 
   if (isValid) {
+    blockSubmitButton();
     sendData(
       onSendSuccess,
-      showErrorMessage,
+      () => {
+        showErrorMessage();
+        unblockSubmitButton();
+      },
       new FormData(adForm),
     );
   }
