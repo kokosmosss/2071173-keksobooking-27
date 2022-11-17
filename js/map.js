@@ -73,9 +73,9 @@ const renderMarkers = (advertisements) => {
 const clearMarkers = () => markerGroup.clearLayers();
 
 const onDataSuccess = (ads) => {
-  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
   activateFilters();
   setFilterListener(ads);
+  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
 };
 
 const initMap = () => {
@@ -102,6 +102,7 @@ const resetMap = () => {
     lat: TOKIO_LAT,
     lng: TOKIO_LNG,
   }, ZOOM);
+  // closePopup()
 };
 
 export { renderMarkers, initMap, resetMap, setDefaultAdress, clearMarkers };

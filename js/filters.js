@@ -20,26 +20,45 @@ const ADVERTISEMENT_COUNT = 10;
 const RENDER_MARKERS_DELAY = 500;
 
 const mapFilter = document.querySelector('.map__filters');
-const mapFilters = mapFilter.querySelectorAll('.map__filter');
 const type = document.querySelector('#housing-type');
 const price = document.querySelector('#housing-price');
 const rooms = document.querySelector('#housing-rooms');
 const guests = document.querySelector('#housing-guests');
-// const features = document.querySelectorAll('.map__feature');
+const features = document.querySelectorAll('.map__checkbox');
 
-const filterByType = (element) => type.value === DEFAULT_VALUE || type.value === element.offer.type;
-const filterByPrice = (element) => price.value === DEFAULT_VALUE || element.offer.price >= PRICE_VALUES[price.value].min && element.offer.price < PRICE_VALUES[price.value].max;
-const filterByRooms = (element) => rooms.value === DEFAULT_VALUE || Number(rooms.value) === element.offer.rooms;
-const filterByGuests = (element) => guests.value === DEFAULT_VALUE || Number(guests.value) === element.offer.guests;
-// const filterByFeatures = (element) => {
-//   const selectedFeatures = features.map((feature) => feature.checked.value); // массив отмеченных значений
-//   if (element.offer.feachures) {
-//     return selectedFeatures.every((feature) => element.offer.feachures.include(feature));
-//   }
-// };
+const filterByFeatures = ({ offer }) => {
+  const selectedFeatures = Array.from(features).filter((feature) => feature.checked);
 
+  if (!selectedFeatures.length) {
+    return true;
+  }
 
-const filtersMarkers = (ads) => ads.filter((ad) => filterByPrice(ad) && filterByType(ad) && filterByRooms(ad) && filterByGuests(ad));
+  if (!offer.features) {
+    return false;
+  }
+
+  return selectedFeatures.every((feature) => offer.features.includes(feature.value));
+};
+
+const filterByType = ({ offer }) => type.value === DEFAULT_VALUE || type.value === offer.type;
+
+const filterByPrice = ({ offer }) => (
+  price.value === DEFAULT_VALUE ||
+  offer.price >= PRICE_VALUES[price.value].min &&
+  offer.price < PRICE_VALUES[price.value].max
+);
+
+const filterByRooms = ({offer}) => rooms.value === DEFAULT_VALUE || Number(rooms.value) === offer.rooms;
+
+const filterByGuests = ({ offer }) => guests.value === DEFAULT_VALUE || Number(guests.value) === offer.guests;
+
+const filtersMarkers = (ads) => ads.filter((ad) => (
+  filterByPrice(ad) &&
+  filterByType(ad) &&
+  filterByRooms(ad) &&
+  filterByGuests(ad) &&
+  filterByFeatures(ad)
+));
 
 const onFilterFormChange = (ads) => {
   clearMarkers();
@@ -55,9 +74,7 @@ const setFilterListener = (data) => {
 };
 
 const resetFilters = () => {
-  mapFilters.forEach((filter) => {
-    filter.value = DEFAULT_VALUE;
-  });
+  mapFilter.reset();
 };
 
 export { setFilterListener, resetFilters };

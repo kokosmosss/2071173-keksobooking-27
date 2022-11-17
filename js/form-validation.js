@@ -2,6 +2,8 @@ import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './messages.js';
 import { resetMap, setDefaultAdress } from './map.js';
 import { resetFilters } from './filters.js';
+// import { renderMarkers } from './map.js';
+import { previewReset } from './images.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -87,15 +89,19 @@ const initSlider = () => {
 
 const resetForm = () => {
   adForm.reset();
-  price.placeholder = minPrices[type.value]; // пока я не написала эту строку у меня плейсхолдер устанавливался некорректно, не соответствовал изначальному...
+  price.placeholder = minPrices[type.value];
+  price.min = minPrices[type.value];
   sliderElement.noUiSlider.set(price.value);
-}; // после вызова очистки валидатор выдает ошибку. как убрать?
+  pristine.reset();
+};
 
-resetButton.addEventListener('click', () => {
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
   resetForm();
   resetMap();
   resetFilters();
-  setDefaultAdress(); // и вот тут он у меня адрес вычищает почему то, именно по нажатию на reset-кнопку. при отправке корректно работет.
+  setDefaultAdress();
+  previewReset();
 });
 
 const blockSubmitButton = () => {
