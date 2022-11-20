@@ -2,7 +2,8 @@ import { activateForm, activateFilters } from './page.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './messages.js';
-
+import { setFilterListener } from './filters.js';
+// resetFilters
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
 const ZOOM = 12;
@@ -13,6 +14,7 @@ const ADVERTISEMENT_COUNT = 10;
 
 const address = document.querySelector('#address');
 const map = L.map('map-canvas');
+const markerGroup = L.layerGroup().addTo(map);
 
 L.tileLayer(TILELAYER_URL, {
   maxZoom: MAX_ZOOM,
@@ -42,7 +44,9 @@ const mainMarker = L.marker(
   },
 );
 
-address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
+const setDefaultAdress = () => {
+  address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
+};
 
 const onMarkerMove = (evt) => {
   const { lat, lng } = evt.target.getLatLng();
@@ -61,14 +65,18 @@ const renderMarkers = (advertisements) => {
       },
     );
     marker
-      .addTo(map)
+      .addTo(markerGroup)
       .bindPopup(renderPopup(element));
   });
 };
 
+const clearMarkers = () => markerGroup.clearLayers();
+
 const onDataSuccess = (ads) => {
-  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
   activateFilters();
+  setFilterListener(ads);
+  renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
+  // resetFilters(ads);
 };
 
 const initMap = () => {
@@ -83,11 +91,19 @@ const initMap = () => {
 
   mainMarker.addTo(map);
   mainMarker.on('move', onMarkerMove);
+  setDefaultAdress();
 };
 
 const resetMap = () => {
-  address.value = `${TOKIO_LAT}, ${TOKIO_LNG}`;
-  mainMarker.setLatLng([TOKIO_LAT, TOKIO_LNG]);
+  mainMarker.setLatLng({
+    lat: TOKIO_LAT,
+    lng: TOKIO_LNG,
+  });
+  map.setView({
+    lat: TOKIO_LAT,
+    lng: TOKIO_LNG,
+  }, ZOOM);
+  getData(onDataSuccess, showAlert);
 };
 
-export { renderMarkers, initMap, resetMap };
+export { renderMarkers, initMap, resetMap, setDefaultAdress, clearMarkers };

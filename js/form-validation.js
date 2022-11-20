@@ -1,6 +1,9 @@
 import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './messages.js';
-import { resetMap } from './map.js';
+import { resetMap, setDefaultAdress } from './map.js';
+import { resetFilters } from './filters.js';
+// import { renderMarkers } from './map.js';
+import { previewReset } from './images.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -17,6 +20,7 @@ const checkIn = adForm.querySelector('#timein');
 const checkOut = adForm.querySelector('#timeout');
 const sliderElement = adForm.querySelector('.ad-form__slider');
 const resetButton = adForm.querySelector('.ad-form__reset');
+const submitButton = adForm.querySelector('.ad-form__submit');
 
 const pristine = new Pristine(adForm, {
   classTo: 'ad-form__element',
@@ -85,20 +89,38 @@ const initSlider = () => {
 
 const resetForm = () => {
   adForm.reset();
-  price.placeholder = minPrices[type.value]; // пока я не написала эту строку у меня плейсхолдер устанавливался некорректно, не соответствовал изначальному...
+  price.placeholder = minPrices[type.value];
+  price.min = minPrices[type.value];
   sliderElement.noUiSlider.set(price.value);
+  pristine.reset();
 };
-// после вызова очистки валидатор выдает ошибку. как убрать?
 
-resetButton.addEventListener('click', () => {
+resetButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
   resetForm();
-  resetMap(); // и вот тут он у меня адрес вычищает почему то, именно в обработчике. при отправке корректно работет.
+  resetMap();
+  resetFilters();
+  setDefaultAdress();
+  previewReset();
 });
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
 
 const onSendSuccess = () => {
   showSuccessMessage();
   resetForm();
   resetMap();
+  resetFilters();
+  setDefaultAdress();
+  unblockSubmitButton();
 };
 
 const onFormSubmit = (evt) => {
@@ -106,9 +128,13 @@ const onFormSubmit = (evt) => {
   const isValid = pristine.validate();
 
   if (isValid) {
+    blockSubmitButton();
     sendData(
       onSendSuccess,
-      showErrorMessage,
+      () => {
+        showErrorMessage();
+        unblockSubmitButton();
+      },
       new FormData(adForm),
     );
   }

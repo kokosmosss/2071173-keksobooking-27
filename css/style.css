@@ -648,6 +648,12 @@ fieldset {
   background-color: #ff6d51;
 }
 
+.ad-form__submit:disabled {
+  color: black;
+  border: 4px solid grey;
+  background-color: grey;
+}
+
 .ad-form__reset {
   margin: 0;
   padding: 0;
