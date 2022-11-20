@@ -70,10 +70,13 @@ const setFilterListener = (data) => {
   mapFilter.addEventListener('change', debounce(() => {
     onFilterFormChange(data);
   }, RENDER_MARKERS_DELAY));
-
 };
 
-const resetFilters = () => {
+const resetFilters = (data) => {
+
+  mapFilter.addEventListener('reset', () => {
+    onFilterFormChange(data);
+  });
   mapFilter.reset();
 };
 

@@ -3,7 +3,7 @@ import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './messages.js';
 import { setFilterListener } from './filters.js';
-
+// resetFilters
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
 const ZOOM = 12;
@@ -76,6 +76,7 @@ const onDataSuccess = (ads) => {
   activateFilters();
   setFilterListener(ads);
   renderMarkers(ads.slice(0, ADVERTISEMENT_COUNT));
+  // resetFilters(ads);
 };
 
 const initMap = () => {
@@ -102,7 +103,7 @@ const resetMap = () => {
     lat: TOKIO_LAT,
     lng: TOKIO_LNG,
   }, ZOOM);
-  // closePopup()
+  getData(onDataSuccess, showAlert);
 };
 
 export { renderMarkers, initMap, resetMap, setDefaultAdress, clearMarkers };
