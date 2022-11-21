@@ -3,7 +3,7 @@ import { debounce } from './util.js';
 import { toggleElements } from './page.js';
 
 const DEFAULT_VALUE = 'any';
-const PRICE_VALUES = {
+const PriceValues = {
   low: {
     min: 0,
     max: 10000,
@@ -51,15 +51,15 @@ const filterByType = ({ offer }) => type.value === DEFAULT_VALUE || type.value =
 
 const filterByPrice = ({ offer }) => (
   price.value === DEFAULT_VALUE ||
-  offer.price >= PRICE_VALUES[price.value].min &&
-  offer.price < PRICE_VALUES[price.value].max
+  offer.price >= PriceValues[price.value].min &&
+  offer.price < PriceValues[price.value].max
 );
 
 const filterByRooms = ({offer}) => rooms.value === DEFAULT_VALUE || Number(rooms.value) === offer.rooms;
 
 const filterByGuests = ({ offer }) => guests.value === DEFAULT_VALUE || Number(guests.value) === offer.guests;
 
-const filtersMarkers = (ads) => ads.filter((ad) => (
+const filterMarkers = (ads) => ads.filter((ad) => (
   filterByPrice(ad) &&
   filterByType(ad) &&
   filterByRooms(ad) &&
@@ -69,7 +69,7 @@ const filtersMarkers = (ads) => ads.filter((ad) => (
 
 const onFilterFormChange = (ads) => {
   clearMarkers();
-  const newAds = filtersMarkers(ads);
+  const newAds = filterMarkers(ads);
   renderMarkers(newAds.slice(0, ADVERTISEMENT_COUNT));
 };
 
