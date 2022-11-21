@@ -77,9 +77,9 @@ const setFilterListener = (data) => {
   mapFilter.addEventListener('change', debounce(() => {
     onFilterFormChange(data);
   }, RENDER_MARKERS_DELAY));
-  mapFilter.addEventListener('reset', () => {
+  mapFilter.addEventListener('reset', debounce(() => {
     onFilterFormChange(data);
-  });
+  }, RENDER_MARKERS_DELAY));
 };
 
 const resetFilters = () => {
