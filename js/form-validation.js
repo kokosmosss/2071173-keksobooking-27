@@ -2,8 +2,7 @@ import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './messages.js';
 import { resetMap, setDefaultAdress } from './map.js';
 import { resetFilters } from './filters.js';
-// import { renderMarkers } from './map.js';
-import { previewReset } from './images.js';
+import { resetPrewiew } from './images.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -30,14 +29,14 @@ const pristine = new Pristine(adForm, {
   errorTextClass: 'text-help',
 }, false);
 
-const accommodationValues = {
+const AccommodationValues = {
   1: ['1'],
   2: ['2', '1'],
   3: ['3', '2', '1'],
   100: ['0'],
 };
 
-const minPrices = {
+const MinPrices = {
   bungalow: 0,
   flat: 1000,
   hotel: 3000,
@@ -46,16 +45,16 @@ const minPrices = {
 };
 
 const validateTitle = () => title.value.length >= MIN_TITLE_LENGTH && title.value.length <= MAX_TITLE_LENGTH;
-const validatePrice = () => price.value >= minPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
-const validateAccommodation = () => accommodationValues[rooms.value].includes(capacity.value);
+const validatePrice = () => price.value >= MinPrices[type.value] && price.value <= MAX_NIGHT_PRICE;
+const validateAccommodation = () => AccommodationValues[rooms.value].includes(capacity.value);
 
 
 const onTypeChange = () => {
-  price.min = minPrices[type.value];
-  price.placeholder = minPrices[type.value];
+  price.min = MinPrices[type.value];
+  price.placeholder = MinPrices[type.value];
 };
 
-const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${minPrices[type.value]} руб.`;
+const printMinPriceError = () => `Минимальная цена для выбранного типа размещения ${MinPrices[type.value]} руб.`;
 
 const createSlider = () => {
   noUiSlider.create(sliderElement, {
@@ -63,7 +62,7 @@ const createSlider = () => {
       min: 0,
       max: 100000,
     },
-    start: minPrices[type.value],
+    start: MinPrices[type.value],
     step: 1,
     connect: 'lower',
     format: {
@@ -89,20 +88,24 @@ const initSlider = () => {
 
 const resetForm = () => {
   adForm.reset();
-  price.placeholder = minPrices[type.value];
-  price.min = minPrices[type.value];
+  price.placeholder = MinPrices[type.value];
+  price.min = MinPrices[type.value];
   sliderElement.noUiSlider.set(price.value);
   pristine.reset();
 };
 
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault();
+const resetPage = () => {
   resetForm();
   resetMap();
   resetFilters();
   setDefaultAdress();
-  previewReset();
-});
+  resetPrewiew();
+};
+
+const onResetButtonClick = (evt) => {
+  evt.preventDefault();
+  resetPage();
+};
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -116,10 +119,7 @@ const unblockSubmitButton = () => {
 
 const onSendSuccess = () => {
   showSuccessMessage();
-  resetForm();
-  resetMap();
-  resetFilters();
-  setDefaultAdress();
+  resetPage();
   unblockSubmitButton();
 };
 
@@ -156,6 +156,7 @@ const initValidation = () => {
     checkIn.value = checkOut.value;
   });
   adForm.addEventListener('submit', onFormSubmit);
+  resetButton.addEventListener('click', onResetButtonClick);
 };
 
 export { initValidation, initSlider };

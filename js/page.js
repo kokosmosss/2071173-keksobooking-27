@@ -19,9 +19,4 @@ const activateForm = () => {
   toggleElements(adFormElements, false);
 };
 
-const activateFilters = () => {
-  mapFilter.classList.remove('map__filters--disabled');
-  toggleElements(mapFilters, false);
-};
-
-export { deactivatePage, activateForm, activateFilters };
+export { deactivatePage, activateForm, toggleElements };
