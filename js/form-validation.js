@@ -2,8 +2,7 @@ import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './messages.js';
 import { resetMap, setDefaultAdress } from './map.js';
 import { resetFilters } from './filters.js';
-// import { renderMarkers } from './map.js';
-import { previewReset } from './images.js';
+import { resetPrewiew } from './images.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -95,14 +94,18 @@ const resetForm = () => {
   pristine.reset();
 };
 
-resetButton.addEventListener('click', (evt) => {
-  evt.preventDefault();
+const resetPage = () => {
   resetForm();
   resetMap();
   resetFilters();
   setDefaultAdress();
-  previewReset();
-});
+  resetPrewiew();
+};
+
+const onResetButtonClick = (evt) => {
+  evt.preventDefault();
+  resetPage();
+};
 
 const blockSubmitButton = () => {
   submitButton.disabled = true;
@@ -116,10 +119,7 @@ const unblockSubmitButton = () => {
 
 const onSendSuccess = () => {
   showSuccessMessage();
-  resetForm();
-  resetMap();
-  resetFilters();
-  setDefaultAdress();
+  resetPage();
   unblockSubmitButton();
 };
 
@@ -156,6 +156,7 @@ const initValidation = () => {
     checkIn.value = checkOut.value;
   });
   adForm.addEventListener('submit', onFormSubmit);
+  resetButton.addEventListener('click', onResetButtonClick);
 };
 
 export { initValidation, initSlider };

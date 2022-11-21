@@ -1,9 +1,9 @@
-import { activateForm, activateFilters } from './page.js';
+import { activateForm } from './page.js';
 import { renderPopup } from './popup.js';
 import { getData } from './api.js';
 import { showAlert } from './messages.js';
-import { setFilterListener } from './filters.js';
-// resetFilters
+import { setFilterListener, activateFilters } from './filters.js';
+
 const TOKIO_LAT = 35.65785;
 const TOKIO_LNG = 139.78248;
 const ZOOM = 12;
@@ -103,7 +103,6 @@ const resetMap = () => {
     lat: TOKIO_LAT,
     lng: TOKIO_LNG,
   }, ZOOM);
-  getData(onDataSuccess, showAlert);
 };
 
 export { renderMarkers, initMap, resetMap, setDefaultAdress, clearMarkers };

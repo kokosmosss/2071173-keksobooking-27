@@ -1,8 +1,9 @@
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
-const avatarChoosen = document.querySelector('.ad-form-header__input');
+const avatarChosen = document.querySelector('.ad-form-header__input');
 const avatarPreview = document.querySelector('.ad-form-header__preview');
-const photoChoosen = document.querySelector('.ad-form__input');
+const photoChosen = document.querySelector('.ad-form__input');
 const photoPreview = document.querySelector('.ad-form__photo');
 
 const onImageChoose = (input, preview) => {
@@ -20,8 +21,8 @@ const onImageChoose = (input, preview) => {
       const newImg = document.createElement('img');
       newImg.src = URL.createObjectURL(file);
       newImg.alt = 'Фото жилья';
-      newImg.height = '68';
-      newImg.width = '68';
+      newImg.height = 68;
+      newImg.width = 68;
       newImg.style.objectFit = 'contain';
       preview.append(newImg);
     }
@@ -29,22 +30,21 @@ const onImageChoose = (input, preview) => {
 };
 
 const setImgChooseEventListener = () => {
-  avatarChoosen.addEventListener('change', () => {
-    onImageChoose(avatarChoosen, avatarPreview);
+  avatarChosen.addEventListener('change', () => {
+    onImageChoose(avatarChosen, avatarPreview);
   });
 
-  photoChoosen.addEventListener('change', () => {
-    onImageChoose(photoChoosen, photoPreview);
+  photoChosen.addEventListener('change', () => {
+    onImageChoose(photoChosen, photoPreview);
   });
 };
 
-const previewReset = () => {
+const resetPrewiew = () => {
   const avatarDefaultImg = avatarPreview.querySelector('img');
-  avatarDefaultImg.src = 'img/muffin-grey.svg';
+  avatarDefaultImg.src = DEFAULT_AVATAR;
   photoPreview.innerHTML = '';
-  avatarChoosen.value = '';
-  photoChoosen.value = '';
+  avatarChosen.value = '';
+  photoChosen.value = '';
 };
 
-setImgChooseEventListener();
-export { setImgChooseEventListener, previewReset };
+export { setImgChooseEventListener, resetPrewiew };

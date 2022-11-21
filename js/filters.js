@@ -1,5 +1,6 @@
 import { renderMarkers, clearMarkers } from './map.js';
 import { debounce } from './util.js';
+import { toggleElements } from './page.js';
 
 const DEFAULT_VALUE = 'any';
 const PRICE_VALUES = {
@@ -20,11 +21,17 @@ const ADVERTISEMENT_COUNT = 10;
 const RENDER_MARKERS_DELAY = 500;
 
 const mapFilter = document.querySelector('.map__filters');
+const mapFilters = mapFilter.querySelectorAll('fieldset, select');
 const type = document.querySelector('#housing-type');
 const price = document.querySelector('#housing-price');
 const rooms = document.querySelector('#housing-rooms');
 const guests = document.querySelector('#housing-guests');
 const features = document.querySelectorAll('.map__checkbox');
+
+const activateFilters = () => {
+  mapFilter.classList.remove('map__filters--disabled');
+  toggleElements(mapFilters, false);
+};
 
 const filterByFeatures = ({ offer }) => {
   const selectedFeatures = Array.from(features).filter((feature) => feature.checked);
@@ -70,14 +77,13 @@ const setFilterListener = (data) => {
   mapFilter.addEventListener('change', debounce(() => {
     onFilterFormChange(data);
   }, RENDER_MARKERS_DELAY));
-};
-
-const resetFilters = (data) => {
-
   mapFilter.addEventListener('reset', () => {
     onFilterFormChange(data);
   });
+};
+
+const resetFilters = () => {
   mapFilter.reset();
 };
 
-export { setFilterListener, resetFilters };
+export { activateFilters, setFilterListener, resetFilters };
